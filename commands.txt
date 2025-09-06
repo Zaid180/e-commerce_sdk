@@ -1,0 +1,114 @@
+E-COMMERCE SYSTEM SETUP COMMANDS
+=================================
+
+This file contains all the necessary commands to set up and run the E-commerce system.
+
+PREREQUISITES
+=============
+- Python 3.8 or higher
+- pip (Python package installer)
+
+SETUP COMMANDS
+==============
+
+1. Create Virtual Environment
+-----------------------------
+python -m venv venv
+
+2. Activate Virtual Environment
+-------------------------------
+Windows:
+venv\Scripts\activate
+
+Linux/Mac:
+source venv/bin/activate
+
+3. Install Dependencies
+-----------------------
+pip install fastapi uvicorn requests
+
+4. Navigate to Project Directory
+--------------------------------
+cd ecommerce
+
+RUNNING THE SYSTEM
+==================
+
+1. Start Backend Server
+-----------------------
+python -m backend.main
+
+Alternative:
+uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+
+2. Run Demo Script (in new terminal)
+------------------------------------
+python demo.py
+
+VERIFICATION COMMANDS
+=====================
+
+1. Check Backend Health
+-----------------------
+curl http://localhost:8000/
+
+2. View API Documentation
+-------------------------
+Open browser: http://localhost:8000/docs
+
+3. Test API Endpoints
+---------------------
+# Add a product
+curl -X POST "http://localhost:8000/products" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Test Product", "price": 99.99, "description": "Test description"}'
+
+# List products
+curl http://localhost:8000/products
+
+# Add to cart
+curl -X POST "http://localhost:8000/cart?product_id=1&quantity=2"
+
+# View cart
+curl http://localhost:8000/cart
+
+# Checkout
+curl -X POST "http://localhost:8000/checkout"
+
+DEACTIVATION
+============
+deactivate
+
+TROUBLESHOOTING
+===============
+
+1. Port Already in Use
+----------------------
+If port 8000 is busy, use a different port:
+uvicorn backend.main:app --port 8001
+
+2. Module Import Errors
+-----------------------
+Ensure you're in the ecommerce directory when running commands.
+
+3. Virtual Environment Issues
+-----------------------------
+Delete venv folder and recreate:
+rmdir /s venv (Windows)
+rm -rf venv (Linux/Mac)
+python -m venv venv
+
+4. Permission Errors
+--------------------
+Run terminal as administrator (Windows) or use sudo (Linux/Mac).
+
+QUICK START SEQUENCE
+====================
+1. python -m venv venv
+2. venv\Scripts\activate (Windows) or source venv/bin/activate (Linux/Mac)
+3. pip install fastapi uvicorn requests
+4. cd ecommerce
+5. python -m backend.main
+6. (In new terminal) python demo.py
+
+The system will be fully functional after these steps!
