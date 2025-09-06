@@ -1,10 +1,29 @@
+
 from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from .models import Product, ProductCreate, ProductUpdate, Cart, Order, UserSignup, UserLogin, SessionToken
 from .memory_store import store
 
+
 app = FastAPI(title="E-commerce API", version="1.0.0")
+@app.post("/signup")
+async def signup(user: UserSignup):
+    ok = store.signup(user.username, user.password, user.role)
+    if not ok:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    return {"message": "Signup successful"}
+
+@app.post("/login", response_model=SessionToken)
+async def login(user: UserLogin):
+    session = store.login(user.username, user.password)
+    if not session:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return session
+
+@app.get("/products/search", response_model=List[Product])
+async def search_products(query: str):
+    return store.search_products(query)
 
 app.add_middleware(
     CORSMiddleware,
@@ -88,3 +107,12 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+# --- Add sample dataset if DB is empty ---
+try:
+    if not store.get_all_products():
+        store.add_product(name="Sample Phone", price=299.99, description="A great phone.")
+        store.add_product(name="Sample Laptop", price=899.99, description="A powerful laptop.")
+        store.add_product(name="Sample Headphones", price=99.99, description="Noise-cancelling headphones.")
+except Exception:
+    pass

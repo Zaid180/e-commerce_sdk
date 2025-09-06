@@ -55,7 +55,7 @@ with st.sidebar:
                         st.session_state['username'] = resp['username']
                         sdk.set_token(resp['token'])
                         st.success("Login successful!")
-                        st.experimental_rerun()
+                        st.rerun()
                     else:
                         sdk.signup(username, password, role)
                         st.success("Signup successful! Please login.")
@@ -68,7 +68,7 @@ with st.sidebar:
             st.session_state['role'] = None
             st.session_state['username'] = None
             sdk.set_token(None)
-            st.experimental_rerun()
+            st.rerun()
     menu = st.radio("Select Role", ["Buyer", "Seller"])
 
 
