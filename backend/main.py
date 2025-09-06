@@ -38,7 +38,8 @@ async def add_product(product: ProductCreate):
     return store.add_product(
         name=product.name,
         price=product.price,
-        description=product.description
+        description=product.description,
+        quantity=product.quantity,
     )
 
 @app.get("/products", response_model=List[Product])
@@ -58,7 +59,8 @@ async def update_product(product_id: int, product_update: ProductUpdate):
         product_id,
         name=product_update.name,
         price=product_update.price,
-        description=product_update.description
+        description=product_update.description,
+        quantity=product_update.quantity if hasattr(product_update, 'quantity') else None,
     )
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -91,6 +93,22 @@ async def remove_from_cart(product_id: int, token: Optional[str] = Header(None))
     store.remove_from_cart(user_id, product_id)
     return {"message": "Product removed from cart"}
 
+@app.put("/cart/{product_id}/increase")
+async def increase_cart_quantity(product_id: int, token: Optional[str] = Header(None)):
+    user = store.get_user_by_token(token) if token else None
+    user_id = user.username if user else "default_user"
+    if not store.increase_cart_quantity(user_id, product_id):
+        raise HTTPException(status_code=404, detail="Product not found in cart")
+    return {"message": "Cart quantity increased"}
+
+@app.put("/cart/{product_id}/decrease")
+async def decrease_cart_quantity(product_id: int, token: Optional[str] = Header(None)):
+    user = store.get_user_by_token(token) if token else None
+    user_id = user.username if user else "default_user"
+    if not store.decrease_cart_quantity(user_id, product_id):
+        raise HTTPException(status_code=404, detail="Product not found in cart")
+    return {"message": "Cart quantity decreased"}
+
 @app.post("/checkout", response_model=Order)
 async def checkout(token: Optional[str] = Header(None)):
     user = store.get_user_by_token(token) if token else None
@@ -106,13 +124,17 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import os
+    port = int(os.getenv("PORT", 8001))
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
 # --- Add sample dataset if DB is empty ---
 try:
-    if not store.get_all_products():
-        store.add_product(name="Sample Phone", price=299.99, description="A great phone.")
-        store.add_product(name="Sample Laptop", price=899.99, description="A powerful laptop.")
-        store.add_product(name="Sample Headphones", price=99.99, description="Noise-cancelling headphones.")
+    products = store.get_all_products()
+    if not products:
+        store.add_product(name="Sample Phone", price=299.99, description="A great phone.", quantity=10)
+        store.add_product(name="Sample Laptop", price=899.99, description="A powerful laptop.", quantity=5)
+        store.add_product(name="Sample Headphones", price=99.99, description="Noise-cancelling headphones.", quantity=20)
 except Exception:
+    # ignore DB errors during import/time of module load
     pass

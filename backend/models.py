@@ -8,18 +8,21 @@ class Product(BaseModel):
     name: str
     price: float
     description: str
+    quantity: int
 
 
 class ProductCreate(BaseModel):
     name: str
     price: float
     description: str
+    quantity: int = 0
 
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
     price: Optional[float] = None
     description: Optional[str] = None
+    quantity: Optional[int] = None
 
 
 class CartItem(BaseModel):
