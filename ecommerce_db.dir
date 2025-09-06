@@ -1,0 +1,7 @@
+'products', (0, 6)
+'carts', (512, 6)
+'orders', (1024, 6)
+'users', (1536, 6)
+'sessions', (2048, 6)
+'next_product_id', (2560, 5)
+'next_order_id', (3072, 5)
