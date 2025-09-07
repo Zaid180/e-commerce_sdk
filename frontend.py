@@ -85,12 +85,12 @@ st.markdown("""
     padding: 20px;
     border-radius: 20px;
     border: 1px solid #e6e6fa;
-    margin: 10px 0;
+    margin: 5px 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .product-card {
     background: #f8f8ff;
-    padding: 20px;
+    padding: 20~px;
     border-radius: 20px;
     border: 1px solid #e6e6fa;
     margin: 15px 0;
