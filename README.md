@@ -15,7 +15,7 @@ A minimal Python-only E-commerce system built with FastAPI, featuring in-memory 
 1. Create virtual environment: `python -m venv venv`
 2. Activate: `venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Linux/Mac)
 3. Install dependencies: `pip install -r requirements.txt`
-4. Start backend: `python -m backend.main`
+4. Start backend: `python start_server.py` or `python -m backend.main`
 5. Run demo: `python demo.py`
 
 ## API Endpoints
@@ -37,7 +37,7 @@ A minimal Python-only E-commerce system built with FastAPI, featuring in-memory 
 
 - `flow.txt` - Detailed development process
 - `commands.txt` - Setup and run commands
-- API docs available at `http://localhost:8000/docs` when running
+- API docs available at `http://localhost:8001/docs` when running
 
 ## Project Structure
 

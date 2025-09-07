@@ -4,7 +4,7 @@ from typing import List, Dict, Any, Optional
 
 
 class EcommerceSDK:
-    def __init__(self, base_url: str = "http://localhost:8000", user_id: str = "default_user", token: str = None):
+    def __init__(self, base_url: str = "http://localhost:8001", user_id: str = "default_user", token: str = None):
         self.base_url = base_url.rstrip('/')
         self.user_id = user_id
         self.token = token
@@ -15,11 +15,11 @@ class EcommerceSDK:
 
     def _headers(self):
         return {"token": self.token} if self.token else {}
-
-    def add_product(self, name: str, price: float, description: str) -> Dict[str, Any]:
+   # add product function 
+    def add_product(self, name: str, price: float, description: str, quantity: int = 0) -> Dict[str, Any]:
         response = self.session.post(
             f"{self.base_url}/products",
-            json={"name": name, "price": price, "description": description},
+            json={"name": name, "price": price, "description": description, "quantity": quantity},
             headers=self._headers()
         )
         response.raise_for_status()
@@ -38,6 +38,8 @@ class EcommerceSDK:
         response = self.session.delete(f"{self.base_url}/products/{product_id}", headers=self._headers())
         response.raise_for_status()
         return response.json()
+    
+   # get all products
 
     def get_products(self) -> List[Dict[str, Any]]:
         response = self.session.get(f"{self.base_url}/products", headers=self._headers())
@@ -74,6 +76,22 @@ class EcommerceSDK:
     def remove_from_cart(self, product_id: int) -> Dict[str, Any]:
         response = self.session.delete(
             f"{self.base_url}/cart/{product_id}",
+            headers=self._headers()
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def increase_cart_quantity(self, product_id: int) -> Dict[str, Any]:
+        response = self.session.put(
+            f"{self.base_url}/cart/{product_id}/increase",
+            headers=self._headers()
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def decrease_cart_quantity(self, product_id: int) -> Dict[str, Any]:
+        response = self.session.put(
+            f"{self.base_url}/cart/{product_id}/decrease",
             headers=self._headers()
         )
         response.raise_for_status()
